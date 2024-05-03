@@ -55,7 +55,6 @@ def generate_text(message, history):
 
     history = ["init", input_prompt]
 
-
 demo = gr.ChatInterface(
     generate_text,
     title="llama-cpp-python on GPU",
@@ -65,6 +64,21 @@ demo = gr.ChatInterface(
     retry_btn=None,
     undo_btn="Delete Previous",
     clear_btn="Clear",
+    additional_inputs=[
+        gr.Textbox(value="You are a friendly Chatbot.", label="System message"),
+        gr.Slider(minimum=1, maximum=2048, value=512, step=1, label="Max new tokens"),
+        gr.Slider(minimum=0.1, maximum=4.0, value=0.7, step=0.1, label="Temperature"),
+        gr.Slider(
+            minimum=0.1,
+            maximum=1.0,
+            value=0.95,
+            step=0.05,
+            label="Top-p (nucleus sampling)",
+        ),
+    ],
 )
-demo.queue(concurrency_count=1, max_size=5)
-demo.launch()
+
+#demo.queue(concurrency_count=1, max_size=5)?
+
+if __name__ == "__main__":
+    demo.launch()
