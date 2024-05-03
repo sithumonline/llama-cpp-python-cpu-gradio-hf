@@ -14,16 +14,7 @@ llm = Llama(
     n_gpu_layers=50, # change n_gpu_layers if you have more or less VRAM 
 ) 
 
-# history = []
 
-# system_message = """
-# You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe.  Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.
-#
-# If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.
-# """
-
-
-# def generate_text(message, history):
 def generate_text(
     message,
     history: list[tuple[str, str]],
@@ -61,8 +52,6 @@ def generate_text(
         temp += stream["choices"][0]["text"]
         yield temp
 
-    # history = ["init", input_prompt]
-
 
 demo = gr.ChatInterface(
     generate_text,
@@ -93,7 +82,6 @@ demo = gr.ChatInterface(
     ],
 )
 
-#demo.queue(concurrency_count=1, max_size=5)?
 
 if __name__ == "__main__":
     demo.launch()
