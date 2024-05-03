@@ -7,8 +7,8 @@ from huggingface_hub import hf_hub_download
 
 llm = Llama(
     model_path=hf_hub_download(
-        repo_id=os.environ.get("REPO_ID", "TheBloke/Llama-2-7b-Chat-GGUF"),
-        filename=os.environ.get("MODEL_FILE", "llama-2-7b-chat.Q5_0.gguf"),
+        repo_id=os.environ.get("REPO_ID", "microsoft/Phi-3-mini-4k-instruct-gguf"),
+        filename=os.environ.get("MODEL_FILE", "Phi-3-mini-4k-instruct-q4.gguf"),
     ),
     n_ctx=2048,
     n_gpu_layers=50, # change n_gpu_layers if you have more or less VRAM 
@@ -82,3 +82,4 @@ demo = gr.ChatInterface(
 
 if __name__ == "__main__":
     demo.launch()
+
