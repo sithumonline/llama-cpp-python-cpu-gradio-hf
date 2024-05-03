@@ -14,16 +14,24 @@ llm = Llama(
     n_gpu_layers=50, # change n_gpu_layers if you have more or less VRAM 
 ) 
 
-history = []
+# history = []
 
-system_message = """
-You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe.  Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.
+# system_message = """
+# You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe.  Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.
+#
+# If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.
+# """
 
-If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.
-"""
 
-
-def generate_text(message, history):
+# def generate_text(message, history):
+def generate_text(
+    message,
+    history: list[tuple[str, str]],
+    system_message,
+    max_tokens,
+    temperature,
+    top_p,
+):
     temp = ""
     input_prompt = f"[INST] <<SYS>>\n{system_message}\n<</SYS>>\n\n "
     for interaction in history:
@@ -33,11 +41,11 @@ def generate_text(message, history):
 
     output = llm(
         input_prompt,
-        temperature=0.15,
-        top_p=0.1,
-        top_k=40, 
+        temperature=temperature,
+        top_p=top_p,
+        top_k=40,
         repeat_penalty=1.1,
-        max_tokens=1024,
+        max_tokens=max_tokens,
         stop=[
             "<|prompter|>",
             "<|endoftext|>",
@@ -53,14 +61,21 @@ def generate_text(message, history):
         temp += stream["choices"][0]["text"]
         yield temp
 
-    history = ["init", input_prompt]
+    # history = ["init", input_prompt]
+
 
 demo = gr.ChatInterface(
     generate_text,
     title="llama-cpp-python on GPU",
     description="Running LLM with https://github.com/abetlen/llama-cpp-python",
-#    examples=[["tell me everything about llamas"]],
-    cache_examples=True,
+    examples=[
+        ['How to setup a human base on Mars? Give short answer.'],
+        ['Explain theory of relativity to me like I’m 8 years old.'],
+        ['What is 9,000 * 9,000?'],
+        ['Write a pun-filled happy birthday message to my friend Alex.'],
+        ['Justify why a penguin might make a good king of the jungle.']
+    ],
+    cache_examples=False,
     retry_btn=None,
     undo_btn="Delete Previous",
     clear_btn="Clear",
